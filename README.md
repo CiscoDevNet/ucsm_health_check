@@ -7,10 +7,10 @@ Standalone UCS health check Script
 
 How to run the tool
 
-1. In GitHub, click on the “Clone or download” button and choose the “Download ZIP” option. This will download a file titled “ucsm_health_check-master.zip”
-2. Save the “ucsm_health_check-master.zip” to a folder on your system
-3. unzip the “ucsm_health_check-master.zip” (#unzip Hyberflex-Hybercheck-master.zip / any windows utility)
-4. Browse to the directory where tool is saved to ucsm_health_check-master (# cd ucsm_health_check-master)
+1. In GitHub, click on the “Clone or download” button and choose the “Download ZIP” option. This will download a file titled “ucsm_health_check-main.zip”
+2. Save the “ucsm_health_check-main.zip” to a folder on your system
+3. unzip the “ucsm_health_check-main.zip” (#unzip ucsm_health_check-main.zip / any windows utility)
+4. Browse to the directory where tool is saved to ucsm_health_check-main (# cd ucsm_health_check-main)
 5. Download the UCSM_Techsupport bundle
 6. Run the command : python UCSMTool.py
 7. Input the location of the UCSM_Techsupport bundle
