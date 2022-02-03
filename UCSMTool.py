@@ -1,7 +1,7 @@
 """
 UCSTool v1.1
 Created on 7-Aug-2020
-Updated on 28-Nov-2021
+Updated on 04-Feb-2022
 @author: Akash(akmalla) ,Gayatri(gakumari) , Afroj(afrahmad) ,Nachiketa(nroutray) ,Kris(kvadecr)
 """
 import warnings
@@ -417,7 +417,7 @@ def check_fi_version():
 
     if os.path.isfile(swTechB):
         fiv.append("\nSide " + subordinate + ":")
-        with open(swTechB, "r") as fh:
+        with open(swTechB, "r", encoding='utf-8', errors='ignore') as fh:
             for line in fh:
                 if "show module" in line:
                     flg2 = 1
