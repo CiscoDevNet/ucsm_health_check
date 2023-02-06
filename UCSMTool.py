@@ -1,7 +1,7 @@
 """
-UCSTool v1.1
+UCSTool v1.2
 Created on 7-Aug-2020
-Updated on 04-Feb-2022
+Updated on 11-Feb-2023
 @author: Akash(akmalla) ,Gayatri(gakumari) , Afroj(afrahmad) ,Nachiketa(nroutray) ,Kris(kvadecr)
 """
 import warnings
@@ -591,7 +591,7 @@ def check_sam_tech():
             sumResult["Check Backup Available"] = "Backup Available"
             detResult["Check Backup Available"] = "Backup Available"
         else:
-            sumResult["Check Backup Available"] = {"Status": "No Backup", "Result": "Please ensure to take backup,\nRefer this link:\nhttp://go2.cisco.com/UCSBackup"}
+            sumResult["Check Backup Available"] = {"Status": "No Backup", "Result": "Please ensure to take backup,\nRefer this link:\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/ucs-manager/GUI-User-Guides/Admin-Management/4-0/b_Cisco_UCS_Admin_Mgmt_Guide_4-0/b_Cisco_UCS_Admin_Mgmt_Guide_4-0_chapter_01010.html#concept_771BC9BD979C4B2EAF2FD863986F6E6F"}
             detResult["Check Backup Available"] = "No Backup"
 
         # Check Keyring modulus size
@@ -690,7 +690,7 @@ def check_sam_tech():
                     except Exception:
                         pass
         if deviceList:
-            sumResult["Deprecated Hardware in Cisco UCS Manager Release 4.x"] = {"Status": "Found", "Result": "Review the release notes to verify the hardware compatibility.\nRefer this link: \nhttp://go2.cisco.com/RN-4"}
+            sumResult["Deprecated Hardware in Cisco UCS Manager Release 4.x"] = {"Status": "Found", "Result": "Review the release notes to verify the hardware compatibility.\nRefer this link: \nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/release/notes/CiscoUCSManager-RN-4-0.html"}
             detResult["Deprecated Hardware in Cisco UCS Manager Release 4.x"] = {"Status": "\n".join(deviceList), "Result": "Found"}
         else:
             sumResult["Deprecated Hardware in Cisco UCS Manager Release 4.x"] = "Not Found"
@@ -770,7 +770,7 @@ def check_known_issues():
                         if pid in deprecatedPids:
                             pidList.append(pid)
         if pidList:
-            sumResult["Deprecated HW found for 3.1.x onwards"] = {"Status": "Found", "Result": "Review the release notes to verify the hardware compatibility.\nRefer these links:\nhttp://go2.cisco.com/RN3\nhttp://go2.cisco.com/RN3-2"}
+            sumResult["Deprecated HW found for 3.1.x onwards"] = {"Status": "Found", "Result": "Review the release notes to verify the hardware compatibility.\nRefer these links:\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/release/notes/CiscoUCSManager-RN-3-1.html\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/release/notes/CiscoUCSManager-RN-3-2.html"}
             detResult["Deprecated HW found for 3.1.x onwards"] = {"Status": "\n".join(pidList), "Result": "Found"}
         else:
             sumResult["Deprecated HW found for 3.1.x onwards"] = "Not Found"
@@ -941,7 +941,7 @@ def check_known_issues():
                                 con5 = 1
                                 break
         if con5:
-            sumResult["UCSM 3.1 Change in max power allocation causes blade discovery failure"] = {"Status": "Found", "Result": "Change the power control policy in Service Profile to \"cap \" with default priority value of \"5\".\nPlease plan to upgrade to one of latest release for permanent fix.\nRefer this link :\nhttp://go2.cisco.com/power+control+policy"}
+            sumResult["UCSM 3.1 Change in max power allocation causes blade discovery failure"] = {"Status": "Found", "Result": "Change the power control policy in Service Profile to \"cap \" with default priority value of \"5\".\nPlease plan to upgrade to one of latest release for permanent fix.\nRefer this link :\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/ucs-manager/GUI-User-Guides/Server-Mgmt/3-1/b_Cisco_UCS_Manager_Server_Mgmt_Guide_3_1/power_management_for_blades_and_power_capping.html#concept_395A0C9B2CA746F1B4DA471E6CA6AD72"}
             detResult["UCSM 3.1 Change in max power allocation causes blade discovery failure"] = {"Status": "\n".join(fault), "Result": "Found"}
         else:
             sumResult["UCSM 3.1 Change in max power allocation causes blade discovery failure"] = {"Status": "Not Found", "Result": ""}
@@ -1320,8 +1320,8 @@ def new_ucsm_health_checks():
             detResult["Health check between UCSM and UCS central"] = {"Status": "UCS Manager is Not Registered", "Result": "Not Found"}
         else:
             ucs_cen_state = "FAIL"
-            sumResult["Health check between UCSM and UCS central"] = {"Status": ucs_cen_state, "Result": "Please check and ensure the reachability between UCS Central and UCS Manager,\nalso verify necessary ports are open.\nRefer this link:\nhttp://go2.cisco.com/UCSCentral"}
-            detResult["Health check between UCSM and UCS central"] = {"Status": "Please check and ensure the reachability between UCS Central and UCS Manager,\nalso verify necessary ports are open.\nRefer this link:\nhttp://go2.cisco.com/UCSCentral", "Result": "FAIL"}
+            sumResult["Health check between UCSM and UCS central"] = {"Status": ucs_cen_state, "Result": "Please check and ensure the reachability between UCS Central and UCS Manager,\nalso verify necessary ports are open.\nRefer this link:\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/ucs-central/install-upgrade/1-1/b_UCSC_Installation_and_Upgrade_Guide_11/b_UCSC_Installation_and_Upgrade_Guide_11_chapter_010.html#reference_22DE16D447A74611870B3B2E2E3ACE16"}
+            detResult["Health check between UCSM and UCS central"] = {"Status": "Please check and ensure the reachability between UCS Central and UCS Manager,\nalso verify necessary ports are open.\nRefer this link:\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/ucs-central/install-upgrade/1-1/b_UCSC_Installation_and_Upgrade_Guide_11/b_UCSC_Installation_and_Upgrade_Guide_11_chapter_010.html#reference_22DE16D447A74611870B3B2E2E3ACE16", "Result": "FAIL"}
 
         # LAN and SAN Pin Groups
         log_msg(INFO, "LAN and SAN Pin Groups")
@@ -1638,8 +1638,10 @@ def new_ucsm_health_checks():
                     flag1 = 0
                     break
                 elif flag1 and "PID" in line:
+                    print(line)         
                     pd = line.strip().split(",")[0].strip().split("PID: ")[1].strip()
-                    if pd and "6454" in pd:
+                    print (pd)
+                    if pd and "64" in pd:
                         conV_5 = 1
                         break
 
@@ -1670,7 +1672,7 @@ def new_ucsm_health_checks():
                     break
                 elif flag1 and "PID" in line:
                     pd = line.strip().split(",")[0].strip().split("PID: ")[1].strip()
-                    if pd and re.search(r"63\d\d", str(pd)):
+                    if pd and re.search(r"64\d\d", str(pd)):
                         con2304_3 = 1
                         break
         with open(swTech, "r", encoding="utf-8", errors="ignore") as f:
