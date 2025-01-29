@@ -1,7 +1,7 @@
 """
 UCSTool v1.2
 Created on 7-Aug-2020
-Updated on 6-Feb-2023
+Updated on 29-Jan-2025
 @author: Akash(akmalla) ,Gayatri(gakumari) , Afroj(afrahmad) ,Nachiketa(nroutray) ,Kris(kvadecr)
 """
 import warnings
@@ -29,7 +29,7 @@ DEBUG = logging.DEBUG
 ERROR = logging.ERROR
 
 # Global Variable
-toolversion = 1.1
+toolversion = 2.0
 builddate = "2021-06-15"
 usr_ch = ""
 
@@ -578,21 +578,27 @@ def check_sam_tech():
         log_msg(INFO, "Check Audit Logs for Backup Available")
         backup = 0
         flag = 0
+        # with open(samTech, "r") as fh:
+        #     for line in fh:
+        #         if "`show audit-logs detail`" in line:
+        #             flag = 1
+        #             continue
+        #         elif flag == 1 and "`show " in line:
+        #             break
+        #         elif flag == 1 and "Description: Backup task for admin" in line:
+        #             backup = 1
         with open(samTech, "r") as fh:
             for line in fh:
-                if "`show audit-logs detail`" in line:
-                    flag = 1
-                    continue
-                elif flag == 1 and "`show " in line:
-                    break
-                elif flag == 1 and "Description: Backup task for admin" in line:
+                if 'enter backup :' in line:
                     backup = 1
+                    break
         if backup:
-            sumResult["Check Backup Available"] = "Backup Available"
-            detResult["Check Backup Available"] = "Backup Available"
+            sumResult["Check Backup Available"] = {"Status": "Found", "Result":"Backup operation has been found. However, please ensure that the latest backup is captured as a best practice."}
+            detResult["Check Backup Available"] = {"Status": "Backup Operation Found", "Result":"Found"}
         else:
-            sumResult["Check Backup Available"] = {"Status": "No Backup", "Result": "Please ensure to take backup,\nRefer this link:\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/ucs-manager/GUI-User-Guides/Admin-Management/4-0/b_Cisco_UCS_Admin_Mgmt_Guide_4-0/b_Cisco_UCS_Admin_Mgmt_Guide_4-0_chapter_01010.html#concept_771BC9BD979C4B2EAF2FD863986F6E6F"}
-            detResult["Check Backup Available"] = "No Backup"
+            sumResult["Check Backup Available"] = {"Status": "Backup Operation Not Found", "Result": "Backup operation has not been found. Please ensure that the latest backup is captured as a best practice."}
+            detResult["Check Backup Available"] = {"Status": "", "Result": "Backup Operation Not Found"}
+        
 
         # Check Keyring modulus size
         log_msg(INFO, "Check Keyring modulus size")
@@ -1295,21 +1301,25 @@ def new_ucsm_health_checks():
                     if val and val.lower() == "registered":
                         con1 = 1
                         break
-
-        with open(samTech, "r") as f:
-            flag1 = 0
-            for line in f:
-                if "`show control-ep fsm status`" in line:
-                    flag1 = 1
-                    continue
-                elif flag1 and "`show" in line:
-                    flag1 = 0
-                    break
-                elif flag1 and "Previous Status: " in line:
-                    val = line.strip().split("Previous Status: ")[1].strip()
-                    if val and val.lower() == "register fsm success":
+                elif flag1 and 'Suspend State:' in line:
+                    val = line.strip().split("Suspend State:")[1].strip()
+                    if val and val.lower() == "Off":
                         con2 = 1
-                        break
+
+        # with open(samTech, "r") as f:
+        #     flag1 = 0
+        #     for line in f:
+        #         if "`show control-ep fsm status`" in line:
+        #             flag1 = 1
+        #             continue
+        #         elif flag1 and "`show" in line:
+        #             flag1 = 0
+        #             break
+        #         elif flag1 and "Previous Status: " in line:
+        #             val = line.strip().split("Previous Status: ")[1].strip()
+        #             if val and val.lower() == "register fsm success":
+        #                 con2 = 1
+        #                 break
         if con1 and con2:
             ucs_cen_state = "PASS"
             sumResult["Health check between UCSM and UCS central"] = {"Status": ucs_cen_state, "Result": ""}
@@ -1322,6 +1332,54 @@ def new_ucsm_health_checks():
             ucs_cen_state = "FAIL"
             sumResult["Health check between UCSM and UCS central"] = {"Status": ucs_cen_state, "Result": "Please check and ensure the reachability between UCS Central and UCS Manager,\nalso verify necessary ports are open.\nRefer this link:\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/ucs-central/install-upgrade/1-1/b_UCSC_Installation_and_Upgrade_Guide_11/b_UCSC_Installation_and_Upgrade_Guide_11_chapter_010.html#reference_22DE16D447A74611870B3B2E2E3ACE16"}
             detResult["Health check between UCSM and UCS central"] = {"Status": "Please check and ensure the reachability between UCS Central and UCS Manager,\nalso verify necessary ports are open.\nRefer this link:\nhttps://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/ucs-central/install-upgrade/1-1/b_UCSC_Installation_and_Upgrade_Guide_11/b_UCSC_Installation_and_Upgrade_Guide_11_chapter_010.html#reference_22DE16D447A74611870B3B2E2E3ACE16", "Result": "FAIL"}
+
+        log_msg(INFO, "Reserve VLAN issue")
+        con1 = con2 = 0
+        flag_fis = ["UCS-FI-6248UP","UCS-FI-6296UP","UCS-FI-6332-16UP-U","UCS-FI-6332","UCS-FI-M-6324"]
+        with open(swTech, "r", encoding="utf-8", errors="ignore") as f:
+            flag1 = 0
+            exit_pattern = r"`[^`]+`"
+            for line in f:
+                if "`show module`" in line:
+                    flag1 = 1
+                    continue
+                elif flag1 and "`show" in line:
+                    flag1 = 0
+                    break
+                elif flag1:
+                    for fi in flag_fis:
+                        if fi in line:
+                            con1 = 1      
+                            break
+        vlan_in_range = []
+        if con1:
+            with open(swTech, "r", encoding="utf-8", errors="ignore") as f:
+                flag1 = 0
+                shvlan = ""
+                for line in f:
+                    if "`show vlan`" in line:
+                        flag1 = 1
+                        continue
+                    elif flag1 and re.search(exit_pattern,line):
+                        print('exit line is', line)
+                        flag1 = 0
+                        break
+                    elif flag1: 
+                        shvlan += "\n" + line
+            search_pattern = r"^\s*(\d+)\s"
+            
+            vlan_numbers = re.findall(search_pattern,shvlan, re.MULTILINE)
+            vlan_numbers = [int(vlan) for vlan in vlan_numbers]
+
+            vlan_in_range = [vlan for vlan in vlan_numbers if 3915 <= vlan <= 4042]
+
+        if len(vlan_in_range) != 0:
+            sumResult["Reserved VLAN Check"] = {"Status": "Found", "Result":f"Reserved VLANs configured {vlan_in_range}. Take required actions before migration"}
+            detResult["Reserved VLAN Check"] = {"Status": "Reserved VLANs configured", "Result":"Found"}
+        else:
+            sumResult["Reserved VLAN Check"] = {"Status": "Not Found", "Result": ""}
+            detResult["Reserved VLAN Check"] = {"Status": "", "Result": "Not Found"}
+
 
         # LAN and SAN Pin Groups
         log_msg(INFO, "LAN and SAN Pin Groups")
@@ -2088,7 +2146,6 @@ if __name__ == "__main__":
         print("Entered Option Doesn't exist -- Quitting")
         sys.exit(0)
 
-    # Verify the File
     if os.path.isfile(filePath):
         pass
     else:
