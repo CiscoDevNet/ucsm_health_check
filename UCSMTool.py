@@ -1,7 +1,7 @@
 """
-UCSTool v1.2
+UCSTool v2.0
 Created on 7-Aug-2020
-Updated on 29-Jan-2025
+Updated on 19-Feb-2025
 @author: Akash(akmalla) ,Gayatri(gakumari) , Afroj(afrahmad) ,Nachiketa(nroutray) ,Kris(kvadecr)
 """
 import warnings
@@ -408,7 +408,7 @@ def check_fi_version():
                         hw = hw[2]
                         if hw == "1.0":
                             hflag2 = 1
-                    elif hflag1 == 1 and re.search("1\s+.*\s+1.0", line):
+                    elif hflag1 == 1 and re.search(r"1\s+.*\s+1.0", line):
                         # Confirm the first module, the FI, is running HW version 1.0
                         fiUnresponsiveCheck = True
                         fiUnresponsive = line.strip()
@@ -813,7 +813,7 @@ def check_known_issues():
                 elif flag1 and flag2 and "Adapter:" in line:
                     flag2 = flag3 = 0
                     continue
-                elif flag1 and flag2 and re.search("(RAID Controller \d+):", line):
+                elif flag1 and flag2 and re.search(r"(RAID Controller \d+):", line):
                     flag3 = 1
                     raid = line.strip()
                 elif flag1 and flag2 and flag3 and "Vendor:" in line:
@@ -933,7 +933,7 @@ def check_known_issues():
                             continue
                         elif flag1 and "`show" in line:
                             break
-                        elif flag1 and re.search("(PSU Capacity \(W\):\s5000)", line):
+                        elif flag1 and re.search(r"(PSU Capacity \(W\):\s5000)", line):
                             con4 = 1
                             fault.append(line)
                             break
@@ -999,10 +999,10 @@ def check_known_issues():
     if os.path.isfile(lsOut):
         with open(lsOut, "r") as fh:
             for line in fh:
-                if re.search("server\.crt.*\/default\.crt", line):
+                if re.search(r"server\.crt.*\/default\.crt", line):
                     con1 = 1
                     dCert = line.strip()
-                if re.search("[ \t][ \t]*default\.crt", line):
+                if re.search(r"[ \t][ \t]*default\.crt", line):
                     con2 = 1
                 if con1 and con2:
                     break
@@ -1131,9 +1131,9 @@ def new_mu_checks():
                 elif flag1 and "`show" in line:
                     flag1 = 0
                     break
-                elif flag1 and re.match("Server \d+:", line):
+                elif flag1 and re.match(r"Server \d+:", line):
                     ser = line.strip()
-                elif flag1 and re.search("Model:\s+HXAF240C-M5SX", line):
+                elif flag1 and re.search(r"Model:\s+HXAF240C-M5SX", line):
                     con2 = 1
                     det_CSCvm55258.append(ser + " ---> " + line.strip())
                     flag1 = 0
@@ -1361,7 +1361,7 @@ def new_ucsm_health_checks():
                         flag1 = 1
                         continue
                     elif flag1 and re.search(exit_pattern,line):
-                        print('exit line is', line)
+                        #print('exit line is', line)
                         flag1 = 0
                         break
                     elif flag1: 
@@ -1635,7 +1635,7 @@ def new_ucsm_health_checks():
                 elif flag1 and "`show" in line:
                     flag1 = 0
                     break
-                elif flag1 and re.search("vlan_id \d+", line):
+                elif flag1 and re.search(r"vlan_id \d+", line):
                     flag2 = 1
                     vlan = line
                 elif flag1 and flag2 and "Membership:" in line:
@@ -1696,9 +1696,9 @@ def new_ucsm_health_checks():
                     flag1 = 0
                     break
                 elif flag1 and "PID" in line:
-                    print(line)         
+                    #print(line)         
                     pd = line.strip().split(",")[0].strip().split("PID: ")[1].strip()
-                    print (pd)
+                    #print (pd)
                     if pd and "64" in pd:
                         conV_5 = 1
                         break
